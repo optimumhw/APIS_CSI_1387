@@ -1,0 +1,14 @@
+requests==2.19.1
+#Flask==1.0.2
+Flask-RESTful==0.3.6
+python-tds==1.9.1
+jsonstruct==0.2a1
+jose==1.0.0
+
+flask
+python-dotenv
+python-jose-cryptodome
+flask-cors
+six
+
+
