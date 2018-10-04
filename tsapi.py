@@ -1,5 +1,7 @@
 
 import os
+import sys
+from datetime import datetime
 from flask_restful import Resource, Api, reqparse
 from model.history_query import History
 from model.datapoints_query import Datapoints
@@ -160,7 +162,7 @@ def getUser():
             return currentUser
 
         except:
-            print 'oops'
+            print('oops - cant get user')
             pass
 
     return '???'
@@ -182,8 +184,8 @@ def getToken():
 @requires_auth
 def getDatapoints():
 
-    print 'inside getDatapoints route'
-    print '...and the user is: ' + apiUsers[getUser()]
+    #print 'inside getDatapoints route'
+    #print '...and the user is: ' + apiUsers[getUser()]
 
     parser = reqparse.RequestParser()
     parser.add_argument('site_name', type=str, help='Cannot parse site_name')
@@ -245,35 +247,19 @@ def getHistory():
     else:
         abort(404)
 
-
-@app.route("/example")
-def getExample():
-
-    prefix = 'ATT.WB3090.WB3090LP.WB3090LP'
-    point_names = ["kW Delta"
-            "kW/Ton Delta",
-            "kWh",
-            "kWh Delta",
-            "OldkW",
-            "OldkW/Ton",
-            "OldkWh",
-            "ProjkW",
-            "ProjkW/Ton",
-            "ProjkWh",
-            "TonHours"]
-
-    cache_time = '2018-07-31'
-    from_time ='2018-03-01'
-    to_time = '2018-03-02'
-
-    history_querier = History(e3os_host, e3os_username, e3os_password)
-
-    data = history_querier.get_history(cache_time, from_time, to_time, prefix, point_names)
+@app.route("/health")
+def getHealth():
+    print("we are here")
+    data = {}
+    data["timestamp"] = datetime.now().isoformat()
+    data["service"] = "tsapi"
     json = jsonify(data)
+    print(json)
     return json
 
 if __name__ == '__main__':
 
+    port = os.environ['PORT']
     e3os_host = os.environ['E3OS_HOST']
     e3os_username = os.environ['E3OS_USER']
     e3os_password = os.environ['E3OS_PASSWORD']
@@ -282,4 +268,4 @@ if __name__ == '__main__':
     print(e3os_username)
     print(e3os_password)
 
-    app.run(port='5002', debug=True)
+    app.run(host='0.0.0.0', port=port, debug=True)

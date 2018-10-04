@@ -1,18 +1,17 @@
-# Using lightweight alpine image
-FROM python:3.7-alpine
+#FROM python:3.5.2-slim
+#RUN mkdir -p /usr/src/app
+#WORKDIR /usr/src/app
+#COPY requirements.txt /usr/src/app
+#RUN apt-get update && \
+#apt-get install -y python-psycopg2 libpq-dev cython && \
+#pip install --upgrade pip && pip install -r requirements.txt
+#COPY . /usr/src/app
+#EXPOSE 5002
+#CMD ["python", "./tsapi.py"]
 
-# Installing packages
-RUN apk update
-RUN pip install --no-cache-dir pipenv
-
-# Defining working directory and adding source code
-WORKDIR /usr/src/app
-COPY Pipfile Pipfile.lock bootstrap.sh ./
-COPY isle_main ./isle_main
-
-# Install API dependencies
-RUN pipenv install
-
-# Start app
-EXPOSE 5000
-ENTRYPOINT ["/usr/src/app/bootstrap.sh"]
+FROM python:3.6
+COPY . /app
+WORKDIR /app
+RUN pip install --upgrade pip && pip install -r requirements.txt
+EXPOSE $PORT
+CMD python ./tsapi.py

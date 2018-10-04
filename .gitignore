@@ -2,3 +2,4 @@
 .vscode/
 *.pyc
 py3venv/
+docker-compose.yml
